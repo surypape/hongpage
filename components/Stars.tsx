@@ -15,19 +15,20 @@ export default function Stars() {
   useEffect(() => {
     const canvas = ref.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')!
+    const el  = canvas
+    const ctx = el.getContext('2d')!
     let stars: Star[] = []
     let animId: number
 
     function resize() {
-      canvas.width  = window.innerWidth
-      canvas.height = window.innerHeight
+      el.width  = window.innerWidth
+      el.height = window.innerHeight
     }
 
     function build() {
       stars = Array.from({ length: 200 }, () => ({
-        x:     Math.random() * canvas.width,
-        y:     Math.random() * canvas.height,
+        x:     Math.random() * el.width,
+        y:     Math.random() * el.height,
         r:     Math.random() * 1.6 + 0.3,
         phase: Math.random() * Math.PI * 2,
         spd:   0.004 + Math.random() * 0.014,
@@ -36,7 +37,7 @@ export default function Stars() {
     }
 
     function draw(ts: number) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, el.width, el.height)
       for (const s of stars) {
         const a = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(ts * s.spd + s.phase))
         ctx.save()
