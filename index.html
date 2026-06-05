@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRAGONMINJUN // 드래곤민준</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire1: #ff2200;
+            --fire2: #ff8800;
+            --fire3: #ffcc00;
+            --bg:    #080008;
+            --white: #ffffff;
+            --dim:   #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ─── Stars ──────────────────────────────────────────────────── */
+        #stars {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page { position: relative; z-index: 1; }
+
+        /* ─── Utilities ─────────────────────────────────────────────── */
+        .fire {
+            background: linear-gradient(90deg, var(--fire1), var(--fire2), var(--fire3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Undertale-style white border box */
+        .ut-box {
+            border: 3px solid var(--white);
+            background: rgba(0,0,0,0.88);
+        }
+
+        /* ─── NAV ───────────────────────────────────────────────────── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8,0,8,0.94);
+            border-bottom: 2px solid var(--fire1);
+            backdrop-filter: blur(10px);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: var(--fire3);
+            text-shadow: 0 0 14px var(--fire2);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover { color: var(--fire3); }
+
+        /* ─── HERO ──────────────────────────────────────────────────── */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px 120px;
+            text-align: center;
+        }
+
+        .hero-soul {
+            font-size: 52px;
+            color: #ff0000;
+            text-shadow: 0 0 24px #ff0000, 0 0 48px #ff000060;
+            animation: soul-pulse 1.6s ease-in-out infinite;
+            margin-bottom: 28px;
+            line-height: 1;
+        }
+
+        @keyframes soul-pulse {
+            0%,100% { transform: scale(1);    text-shadow: 0 0 24px #ff0000; }
+            50%      { transform: scale(1.12); text-shadow: 0 0 40px #ff4444, 0 0 70px #ff000060; }
+        }
+
+        .hero-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(32px, 9vw, 88px);
+            line-height: 1.35;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 12px rgba(255,136,0,0.5));
+        }
+
+        .hero-sub {
+            font-size: clamp(13px, 2.5vw, 18px);
+            color: #cccccc;
+            letter-spacing: 3px;
+            margin-bottom: 44px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .ut-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            padding: 14px 26px;
+            background: transparent;
+            border: 3px solid var(--white);
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+
+        .ut-btn:hover {
+            background: var(--white);
+            color: var(--bg);
+            transform: scale(1.04);
+        }
+
+        .ut-btn.fire-btn {
+            border-color: var(--fire2);
+            color: var(--fire3);
+        }
+
+        .ut-btn.fire-btn:hover {
+            background: var(--fire2);
+            color: var(--bg);
+            border-color: var(--fire2);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--dim);
+            animation: bounce 2.2s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(9px); }
+        }
+
+        /* ─── SECTION common ────────────────────────────────────────── */
+        .section-wrap {
+            padding: 90px 24px;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--fire2);
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .section-heading {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(18px, 4vw, 30px);
+            margin-bottom: 44px;
+        }
+
+        /* ─── ABOUT ─────────────────────────────────────────────────── */
+        .stats-box {
+            max-width: 580px;
+        }
+
+        .stats-bar {
+            background: var(--white);
+            color: var(--bg);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            padding: 10px 18px;
+            letter-spacing: 1px;
+        }
+
+        .stats-inner { padding: 26px 22px; }
+
+        .dialogue {
+            font-size: 16px;
+            color: #dddddd;
+            line-height: 1.8;
+            border-left: 3px solid var(--fire2);
+            padding-left: 16px;
+            margin-bottom: 26px;
+        }
+
+        .stat-table {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 11px 22px;
+            margin-bottom: 28px;
+        }
+
+        .sk {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--fire2);
+            padding-top: 3px;
+            white-space: nowrap;
+        }
+
+        .sv {
+            font-size: 15px;
+            color: var(--white);
+            line-height: 1.5;
+        }
+
+        .sv .muted { color: #888; font-size: 12px; }
+
+        .hp-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--fire3);
+            margin-bottom: 8px;
+        }
+
+        .hp-track {
+            border: 2px solid var(--white);
+            background: #140008;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+            background: linear-gradient(90deg, var(--fire1), var(--fire2), var(--fire3), var(--fire2), var(--fire1));
+            background-size: 400% 100%;
+            animation: fire-flow 3s linear infinite;
+        }
+
+        @keyframes fire-flow {
+            0%   { background-position:   0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        /* ─── HOBBIES ───────────────────────────────────────────────── */
+        .hobby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .hobby-card {
+            border: 3px solid var(--white);
+            background: rgba(0,0,0,0.82);
+            padding: 28px 20px;
+            cursor: pointer;
+            transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            text-align: center;
+        }
+
+        .hobby-card:hover {
+            border-color: var(--fire2);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 28px rgba(255,136,0,0.35);
+        }
+
+        .hobby-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+
+        .hobby-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--fire3);
+            margin-bottom: 12px;
+        }
+
+        .hobby-desc { font-size: 13px; color: #cccccc; line-height: 1.7; }
+
+        /* ─── GALLERY ───────────────────────────────────────────────── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .gallery-slot {
+            border: 3px solid #333;
+            background: #0c000c;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .gallery-slot:hover {
+            border-color: var(--fire2);
+            box-shadow: 0 0 16px rgba(255,136,0,0.25);
+        }
+
+        .gallery-q {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 32px;
+            color: #333;
+        }
+
+        .gallery-tag {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #2a2a2a;
+        }
+
+        .gallery-note {
+            text-align: center;
+            margin-top: 28px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--dim);
+        }
+
+        /* ─── FOOTER ────────────────────────────────────────────────── */
+        footer {
+            border-top: 2px solid #280028;
+            padding: 44px 24px;
+            text-align: center;
+        }
+
+        .footer-det {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: var(--fire2);
+            margin-bottom: 16px;
+            text-shadow: 0 0 10px var(--fire1);
+        }
+
+        .footer-copy { font-size: 12px; color: #444; }
+
+        /* ─── Mobile ─────────────────────────────────────────────────  */
+        @media (max-width: 600px) {
+            nav { padding: 12px 16px; }
+            .nav-links { gap: 14px; }
+            .nav-links a { font-size: 8px; }
+            .section-wrap { padding: 60px 16px; }
+            .hero { padding: 60px 16px 100px; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="page">
+
+    <!-- ── NAV ─────────────────────────────────────────────────────── -->
+    <nav>
+        <a class="nav-logo" href="#">♥ DMJ</a>
+        <ul class="nav-links">
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#hobbies">HOBBIES</a></li>
+            <li><a href="#gallery">GALLERY</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── HERO ─────────────────────────────────────────────────────── -->
+    <div class="hero">
+        <div class="hero-soul">♥</div>
+        <h1 class="hero-title">
+            <span class="fire">DRAGON</span><br>
+            <span class="fire">MINJUN</span>
+        </h1>
+        <p class="hero-sub">드래곤민준의 공개 기지 &nbsp;·&nbsp; 14살 &nbsp;·&nbsp; 태양계</p>
+        <div class="hero-btns">
+            <a href="#about"   class="ut-btn fire-btn">▶ 탐험 시작</a>
+            <a href="#hobbies" class="ut-btn">취미 보기</a>
+        </div>
+        <div class="scroll-hint">▼ &nbsp; SCROLL &nbsp; ▼</div>
+    </div>
+
+    <!-- ── ABOUT ─────────────────────────────────────────────────────── -->
+    <section id="about">
+        <div class="section-wrap">
+            <div class="section-tag">// CHAPTER 01</div>
+            <h2 class="section-heading"><span class="fire">나는 누구?</span></h2>
+
+            <div class="ut-box stats-box">
+                <div class="stats-bar">★ DRAGONMINJUN // STATUS</div>
+                <div class="stats-inner">
+                    <p class="dialogue">
+                        * 안녕! 난 드래곤민준이야.<br>
+                        언젠간 내가 만든 게임으로 세상을 뒤집을 거야.
+                    </p>
+
+                    <div class="stat-table">
+                        <span class="sk">NAME</span>
+                        <span class="sv">민준 <span class="muted">/ DRAGONMINJUN</span></span>
+
+                        <span class="sk">LV</span>
+                        <span class="sv">14 <span class="muted">(나이)</span></span>
+
+                        <span class="sk">GRADE</span>
+                        <span class="sv">중학교 2학년</span>
+
+                        <span class="sk">LOC</span>
+                        <span class="sv">태양계 🪐</span>
+
+                        <span class="sk">GOAL</span>
+                        <span class="sv">게임 개발자</span>
+
+                        <span class="sk">LIKES</span>
+                        <span class="sv">언더테일 · 일렉 · 음악 · 보드게임</span>
+
+                        <span class="sk">HATES</span>
+                        <span class="sv">공부 공부 공부 공부 공부...</span>
+                    </div>
+
+                    <div class="hp-label">열정 HP &nbsp; ████████████ &nbsp; 99/99</div>
+                    <div class="hp-track">
+                        <div class="hp-fill" id="hp-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── HOBBIES ───────────────────────────────────────────────────── -->
+    <section id="hobbies">
+        <div class="section-wrap">
+            <div class="section-tag">// CHAPTER 02</div>
+            <h2 class="section-heading"><span class="fire">취미 목록</span></h2>
+
+            <div class="hobby-grid">
+                <div class="hobby-card">
+                    <span class="hobby-icon">🎮</span>
+                    <div class="hobby-name">UNDERTALE</div>
+                    <p class="hobby-desc">나의 최애 게임. 언더테일 감성이 내 전부에 스며있어.</p>
+                </div>
+                <div class="hobby-card">
+                    <span class="hobby-icon">⚡</span>
+                    <div class="hobby-name">일렉 / 음악</div>
+                    <p class="hobby-desc">일렉 좋아함. 언젠간 내 게임 BGM도 직접 만들고 싶어.</p>
+                </div>
+                <div class="hobby-card">
+                    <span class="hobby-icon">🎲</span>
+                    <div class="hobby-name">보드게임</div>
+                    <p class="hobby-desc">전략 있는 게임이면 뭐든 좋아. 이기는 게 최고야.</p>
+                </div>
+                <div class="hobby-card">
+                    <span class="hobby-icon">💻</span>
+                    <div class="hobby-name">게임 개발</div>
+                    <p class="hobby-desc">장래희망이자 취미. 내가 만든 게임을 세상에 내놓을 거야.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── GALLERY ───────────────────────────────────────────────────── -->
+    <section id="gallery">
+        <div class="section-wrap">
+            <div class="section-tag">// CHAPTER 03</div>
+            <h2 class="section-heading"><span class="fire">갤러리</span></h2>
+
+            <div class="gallery-grid">
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+                <div class="gallery-slot"><span class="gallery-q">?</span><span class="gallery-tag">준비 중</span></div>
+            </div>
+            <p class="gallery-note">* 곧 채워질 예정입니다...</p>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+    <footer>
+        <p class="footer-det">* You feel determined.</p>
+        <p class="footer-copy">© 2025 DRAGONMINJUN // 드래곤민준</p>
+    </footer>
+
+</div>
+
+<script>
+'use strict';
+
+// ── 별 애니메이션 ──────────────────────────────────────────────────────────
+const cvs = document.getElementById('stars');
+const cx  = cvs.getContext('2d');
+let stars = [];
+
+function resize() {
+    cvs.width  = window.innerWidth;
+    cvs.height = window.innerHeight;
+}
+
+function buildStars() {
+    const COLORS = ['#ffffff','#ffe8a0','#ffb060','#ff8060'];
+    stars = Array.from({ length: 200 }, () => ({
+        x:     Math.random() * cvs.width,
+        y:     Math.random() * cvs.height,
+        r:     Math.random() * 1.6 + 0.3,
+        phase: Math.random() * Math.PI * 2,
+        spd:   0.004 + Math.random() * 0.014,
+        col:   COLORS[Math.random() * COLORS.length | 0],
+    }));
+}
+
+function drawStars(ts) {
+    cx.clearRect(0, 0, cvs.width, cvs.height);
+    stars.forEach(s => {
+        const a = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(ts * s.spd + s.phase));
+        cx.save();
+        cx.globalAlpha  = a;
+        cx.shadowBlur   = s.r * 7;
+        cx.shadowColor  = s.col;
+        cx.fillStyle    = s.col;
+        cx.beginPath();
+        cx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        cx.fill();
+        cx.restore();
+    });
+    requestAnimationFrame(drawStars);
+}
+
+window.addEventListener('resize', () => { resize(); buildStars(); });
+resize();
+buildStars();
+requestAnimationFrame(drawStars);
+
+// ── 언더테일 효과음 ──────────────────────────────────────────────────────
+let AC = null;
+function getAC() {
+    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    return AC;
+}
+
+function playBeep(freq = 260, dur = 0.08) {
+    try {
+        const ac  = getAC();
+        const osc = ac.createOscillator();
+        const g   = ac.createGain();
+        osc.connect(g);
+        g.connect(ac.destination);
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        g.gain.setValueAtTime(0.15, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+        osc.start(ac.currentTime);
+        osc.stop(ac.currentTime + dur + 0.01);
+    } catch (_) {}
+}
+
+// 모든 클릭 가능한 요소에 호버음 + 클릭음 적용
+document.querySelectorAll('.ut-btn, .hobby-card, .gallery-slot, .nav-links a').forEach(el => {
+    el.addEventListener('mouseenter', () => playBeep(220, 0.06));
+    el.addEventListener('click',      () => playBeep(320, 0.10));
+});
+
+// ── HP 바 스크롤 인터섹션 ─────────────────────────────────────────────────
+const hpFill = document.getElementById('hp-fill');
+new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) hpFill.style.width = '99%';
+}, { threshold: 0.5 }).observe(hpFill);
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Custom Components ───────────────────────────────────────────── */
+@layer components {
+  /* 불꽃 그라디언트 텍스트 */
+  .fire-text {
+    background: linear-gradient(90deg, #ff2200, #ff8800, #ffcc00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* 언더테일 스타일 흰 테두리 박스 */
+  .ut-box {
+    @apply border-[3px] border-white;
+    background: rgba(0, 0, 0, 0.88);
+  }
+
+  /* 언더테일 스타일 버튼 */
+  .ut-btn {
+    @apply font-pixel text-[11px] px-6 py-[14px] bg-transparent border-[3px]
+           border-white text-white no-underline inline-block cursor-pointer
+           transition-all duration-150
+           hover:bg-white hover:text-page-bg hover:scale-105;
+  }
+
+  .ut-btn-fire {
+    @apply border-fire-2 text-fire-3
+           hover:bg-fire-2 hover:border-fire-2 hover:text-page-bg;
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────── */
+@keyframes soul-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px #ff0000);
+  }
+  50% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 22px #ff4444) drop-shadow(0 0 40px rgba(255, 0, 0, 0.4));
+  }
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(9px); }
+}
+
+@keyframes fire-flow {
+  0%   { background-position:   0% 0%; }
+  100% { background-position: 400% 0%; }
+}
+
+/* ── Animation Utility Classes ───────────────────────────────────── */
+.animate-soul {
+  animation: soul-pulse 1.6s ease-in-out infinite;
+}
+
+.animate-scroll-bounce {
+  animation: scroll-bounce 2.2s ease-in-out infinite;
+}
+
+.hp-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+  background: linear-gradient(90deg, #ff2200, #ff8800, #ffcc00, #ff8800, #ff2200);
+  background-size: 400% 100%;
+  animation: fire-flow 3s linear infinite;
+}
