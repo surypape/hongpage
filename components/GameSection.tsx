@@ -3,6 +3,39 @@
 import Link from 'next/link'
 import { useSound } from '@/hooks/useSound'
 
+const GAMES = [
+  {
+    href:    '/game/nyun',
+    title:   '1년살기',
+    sub:     'BULLET HELL',
+    accent:  '#44aaff',
+    border:  'border-white',
+    btnCls:  'ut-btn ut-btn-fire',
+    dots:    ['#ff4466','#ffaa33','#33ffcc','#9944ff','#44aaff'],
+    desc:    '* 1월 1일부터 12월 31일까지 탄막을 피하며 살아남는 게임. 날짜가 지날수록 패턴이 강해진다.',
+    stats: [
+      { k: 'LIVES',   v: '♥ x 2' },
+      { k: 'DAYS',    v: '365일' },
+      { k: 'CONTROL', v: 'WASD / 방향키' },
+    ],
+  },
+  {
+    href:    '/game/samguk',
+    title:   '삼국열전기',
+    sub:     '三國列傳記 — 大戰',
+    accent:  '#c9a84c',
+    border:  'border-[#c9a84c]',
+    btnCls:  'ut-btn',
+    dots:    ['#4a90d9','#5cb85c','#c0392b','#c9a84c','#e8dfc8'],
+    desc:    '* 위 · 촉 · 오 삼국이 맞붙는 전략 보드게임. 장수를 배치하고 전장을 지배하라.',
+    stats: [
+      { k: 'FACTIONS', v: '魏 · 蜀 · 吳' },
+      { k: 'TYPE',     v: '전략 보드게임' },
+      { k: 'CONTROL',  v: '마우스' },
+    ],
+  },
+]
+
 export default function GameSection() {
   const { playBeep } = useSound()
 
@@ -16,62 +49,55 @@ export default function GameSection() {
         <span className="fire-text">내가 만든 게임</span>
       </h2>
 
-      {/* 게임 카드 */}
-      <div className="ut-box max-w-[560px]">
-        <div className="bg-white text-page-bg font-pixel text-[11px] px-[18px] py-[10px]">
-          ★ 날짜 생존기 // BULLET HELL
-        </div>
-        <div className="p-7">
-          {/* 미니 프리뷰 */}
-          <div className="border-[2px] border-[#333] mb-6 overflow-hidden"
-               style={{ background: '#08081a', aspectRatio: '800/180' }}>
-            {/* 별 미리보기 */}
-            <div className="w-full h-full flex items-center justify-center gap-8 relative">
-              {['#ff4466','#ffaa33','#33ffcc','#9944ff','#44aaff'].map((c, i) => (
-                <div key={i} className="rounded-full"
-                     style={{
-                       width: 10, height: 10,
-                       background: c,
-                       boxShadow: `0 0 10px ${c}`,
-                       animation: `bounce ${0.8 + i * 0.15}s ease-in-out infinite alternate`,
-                     }} />
-              ))}
-              <span className="absolute font-pixel text-[9px] text-[#555] bottom-2 right-3">
-                탄막이 날아오는 게임
-              </span>
+      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+        {GAMES.map(({ href, title, sub, accent, border, btnCls, dots, desc, stats }) => (
+          <div key={href} className={`ut-box ${border}`}>
+            {/* 타이틀 바 */}
+            <div className="font-pixel text-[11px] px-[18px] py-[10px] tracking-wide"
+                 style={{ background: accent, color: '#080008' }}>
+              ★ {title} // {sub}
+            </div>
+
+            <div className="p-6">
+              {/* 도트 프리뷰 */}
+              <div className="border-[2px] border-[#222] mb-5 flex items-center justify-center gap-5 relative"
+                   style={{ background: '#080814', height: 72 }}>
+                {dots.map((c, i) => (
+                  <div key={i} className="rounded-full"
+                       style={{
+                         width: 10, height: 10,
+                         background: c,
+                         boxShadow: `0 0 10px ${c}`,
+                         animation: `scroll-bounce ${0.7 + i * 0.15}s ease-in-out infinite alternate`,
+                       }} />
+                ))}
+              </div>
+
+              {/* 설명 */}
+              <p className="text-[14px] text-[#cccccc] leading-[1.8] border-l-[3px] pl-4 mb-5"
+                 style={{ borderColor: accent }}>
+                {desc}
+              </p>
+
+              {/* 스탯 */}
+              <div className="flex gap-5 mb-6 flex-wrap">
+                {stats.map(({ k, v }) => (
+                  <div key={k}>
+                    <div className="font-pixel text-[8px] mb-1" style={{ color: accent }}>{k}</div>
+                    <div className="text-[13px] text-white">{v}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* 플레이 버튼 */}
+              <Link href={href} className={btnCls}
+                    onMouseEnter={() => playBeep(220, 0.06)}
+                    onClick={() => playBeep(320, 0.10)}>
+                ▶ PLAY
+              </Link>
             </div>
           </div>
-
-          {/* 설명 */}
-          <p className="text-[15px] text-[#cccccc] leading-[1.8] border-l-[3px] border-fire-2 pl-4 mb-6">
-            * 1월 1일부터 12월 31일까지 탄막을 피하며 살아남는 게임.<br />
-            날짜가 지날수록 패턴이 강해지고, 특수 이벤트 날엔 뭔가 일어날 예정.
-          </p>
-
-          {/* 스탯 */}
-          <div className="flex gap-6 mb-8 flex-wrap">
-            {[
-              { k: 'LIVES',   v: '♥ x 2' },
-              { k: 'DAYS',    v: '365일' },
-              { k: 'CONTROL', v: 'WASD / 방향키' },
-            ].map(({ k, v }) => (
-              <div key={k}>
-                <div className="font-pixel text-[8px] text-fire-2 mb-1">{k}</div>
-                <div className="text-[14px] text-white">{v}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* 플레이 버튼 */}
-          <Link
-            href="/game"
-            className="ut-btn ut-btn-fire inline-block"
-            onMouseEnter={() => playBeep(220, 0.06)}
-            onClick={() => playBeep(320, 0.10)}
-          >
-            ▶ PLAY
-          </Link>
-        </div>
+        ))}
       </div>
     </section>
   )
