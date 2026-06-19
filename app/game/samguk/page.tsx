@@ -14,7 +14,7 @@ export default function SamgukPage() {
         </Link>
         <span className="font-pixel text-[11px] text-[#e8dfc8] tracking-widest">삼국열전기 — 大戰</span>
       </div>
-      <iframe src="/game-samguk.html" className="flex-1 w-full border-0" title="삼국열전기" allow="autoplay" />
+      <iframe src="https://sanguorezhanji.vercel.app/" className="flex-1 w-full border-0" title="삼국열전기" allow="autoplay" />
     </div>
   )
 }
