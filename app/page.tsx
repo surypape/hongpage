@@ -1,11 +1,12 @@
-import Stars   from '@/components/Stars'
-import Nav     from '@/components/Nav'
-import Hero    from '@/components/Hero'
-import About   from '@/components/About'
-import Hobbies from '@/components/Hobbies'
-import Gallery from '@/components/Gallery'
-import Footer  from '@/components/Footer'
-import BGM     from '@/components/BGM'
+import Stars       from '@/components/Stars'
+import Nav         from '@/components/Nav'
+import Hero        from '@/components/Hero'
+import About       from '@/components/About'
+import Hobbies     from '@/components/Hobbies'
+import GameSection from '@/components/GameSection'
+import Gallery     from '@/components/Gallery'
+import Footer      from '@/components/Footer'
+import BGM         from '@/components/BGM'
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
           <Hero />
           <About />
           <Hobbies />
+          <GameSection />
           <Gallery />
         </main>
         <Footer />

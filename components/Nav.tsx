@@ -5,6 +5,7 @@ import { useSound } from '@/hooks/useSound'
 const LINKS = [
   { label: 'ABOUT',   href: '#about'   },
   { label: 'HOBBIES', href: '#hobbies' },
+  { label: 'GAME',    href: '#game'    },
   { label: 'GALLERY', href: '#gallery' },
 ]
 
